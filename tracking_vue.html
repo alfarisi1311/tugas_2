@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracking DO - UT Learning Materials</title>
+    <link rel="stylesheet" href="css/vue.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="tracking-app">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <a href="dashboard.html" class="btn-back"><b>Kembali Ke Dashboard</b></a>
+                        <h1>Tracking Delivery Order</h1>
+                    </div>
+                    <nav>
+                        <ul>
+                            <li><a href="stok_vue.html" class="nav-link"><b>Stok Bahan Ajar</b></a></li>
+                            <li><a href="tracking_vue.html" class="nav-link"><b>Tracking DO</b></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🚚 Tracking Delivery Order (DO)</h2>
+                    <button class="btn btn-primary" @click="showDOForm = true">Tambah DO Baru</button>
+                </div>
+
+                <!-- Form Tambah DO -->
+                <div v-if="showDOForm" class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Form Pemesanan DO Baru</h2>
+                    </div>
+
+                    <div v-if="doFormMessage" :class="['alert', doFormMessage.type === 'success' ? 'alert-success' : 'alert-danger']">
+                        {{ doFormMessage.text }}
+                    </div>
+
+                    <form @submit.prevent="saveDO">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nomorDO">Nomor DO</label>
+                                <input 
+                                    type="text" 
+                                    id="nomorDO" 
+                                    v-model="doForm.nomorDO" 
+                                    readonly
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label for="tanggalKirim">Tanggal Kirim </label>
+                                <input 
+                                    type="date" 
+                                    id="tanggalKirim" 
+                                    v-model="doForm.tanggalKirim" 
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nim">NIM </label>
+                                <input 
+                                    type="text" 
+                                    id="nim" 
+                                    v-model="doForm.nim" 
+                                    required
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label for="nama">Nama </label>
+                                <input 
+                                    type="text" 
+                                    id="nama" 
+                                    v-model="doForm.nama" 
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ekspedisi">Ekspedisi </label>
+                                <select id="ekspedisi" v-model="doForm.ekspedisi" required>
+                                    <option value="">Pilih Ekspedisi</option>
+                                    <option v-for="pengiriman in pengirimanList" :value="pengiriman.kode">{{ pengiriman.nama }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="paket">Paket Bahan Ajar </label>
+                                <select id="paket" v-model="doForm.paket" required>
+                                    <option value="">Pilih Paket</option>
+                                    <option v-for="p in paket" :value="p.kode">{{ p.nama }} - Rp {{ formatNumber(p.harga) }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div v-if="selectedPaket" class="form-group">
+                            <label>Detail Paket:</label>
+                            <div class="card" style="background-color: #f8f9fa; padding: 15px;">
+                                <p><strong>{{ selectedPaket.nama }}</strong></p>
+                                <p>Mata Kuliah: {{ selectedPaket.isi.join(', ') }}</p>
+                                <p>Harga: Rp {{ formatNumber(selectedPaket.harga) }}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="totalHarga">Total Harga</label>
+                            <input 
+                                type="text" 
+                                id="totalHarga" 
+                                v-model="doForm.totalHarga" 
+                                readonly
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Simpan DO</button>
+                            <button type="button" class="btn btn-outline" @click="cancelDOForm">Batal</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Daftar DO -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Daftar Delivery Order</h2>
+                    </div>
+
+                    <div v-if="deliveryOrders.length > 0">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nomor DO</th>
+                                    <th>NIM</th>
+                                    <th>Nama</th>
+                                    <th>Tanggal Kirim</th>
+                                    <th>Ekspedisi</th>
+                                    <th>Paket</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="doItem in deliveryOrders" :key="doItem.nomorDO">
+                                    <td>{{ doItem.nomorDO }}</td>
+                                    <td>{{ doItem.nim }}</td>
+                                    <td>{{ doItem.nama }}</td>
+                                    <td>{{ formatDate(doItem.tanggalKirim) }}</td>
+                                    <td>
+                                        <span v-if="doItem.ekspedisi === 'REG'" class="badge badge-info">Reguler</span>
+                                        <span v-else class="badge badge-warning">Ekspres</span>
+                                    </td>
+                                    <td>{{ getPaketName(doItem.paket) }}</td>
+                                    <td>Rp {{ formatNumber(doItem.total) }}</td>
+                                    <td>
+                                        <span v-if="doItem.status === 'Selesai'" class="badge badge-success">Selesai</span>
+                                        <span v-else-if="doItem.status === 'Dalam Perjalanan'" class="badge badge-warning">Dalam Perjalanan</span>
+                                        <span v-else class="badge badge-info">Dipesan</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary" @click="viewTracking(doItem)">Tracking</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div v-else class="empty-state">
+                        <i>📦</i>
+                        <h3>Belum ada data Delivery Order</h3>
+                        <p>Klik "Tambah DO Baru" untuk membuat pesanan pertama</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Tracking Detail -->
+            <div v-if="selectedDO" class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Tracking DO: {{ selectedDO.nomorDO }}</h2>
+                    <button class="btn btn-outline" @click="selectedDO = null">Tutup</button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>NIM</label>
+                        <p><strong>{{ selectedDO.nim }}</strong></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama</label>
+                        <p><strong>{{ selectedDO.nama }}</strong></p>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tanggal Kirim</label>
+                        <p><strong>{{ formatDate(selectedDO.tanggalKirim) }}</strong></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Ekspedisi</label>
+                        <p><strong>{{ selectedDO.ekspedisi === 'REG' ? 'Reguler' : 'Ekspres' }}</strong></p>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Paket</label>
+                        <p><strong>{{ getPaketName(selectedDO.paket) }}</strong></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Total</label>
+                        <p><strong>Rp {{ formatNumber(selectedDO.total) }}</strong></p>
+                    </div>
+                </div>
+
+                <div class="tracking-timeline">
+                    <h3>Riwayat Pengiriman</h3>
+                    <div v-if="selectedDO.perjalanan && selectedDO.perjalanan.length > 0">
+                        <div v-for="(step, index) in selectedDO.perjalanan" :key="index" class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-time">{{ step.waktu }}</div>
+                                <div class="timeline-desc">{{ step.keterangan }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="empty-state">
+                        <p>Belum ada riwayat pengiriman untuk DO ini</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/tracking-app.js"></script>
+</body>
+</html>

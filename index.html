@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - SITTA Universitas Terbuka</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="login-bg">
+  <main class="login-container">
+    <section class="login-box">
+      <div class="login-header">
+        <img src="img/logo_ut.png" alt="Logo Universitas Terbuka" class="logo-large" />
+        <h1 class="site-title">SITTA - Universitas Terbuka</h1>
+        <p class="site-subtitle">Sistem Pemesanan & Distribusi Bahan Ajar</p>
+      </div>
+
+      <form id="loginForm" class="login-form" autocomplete="off" novalidate>
+        <label for="email" class="input-label">Email</label>
+        <input id="email" name="email" type="email" placeholder="nama@ut.ac.id" required />
+
+        <label for="password" class="input-label">Password</label>
+        <input id="password" name="password" type="password" placeholder="Password" required />
+
+        <button type="submit" class="btn primary full">Login</button>
+
+        <div class="login-links">
+          <button type="button" id="forgotBtn" class="link-btn">Lupa Password</button>
+          <span class="divider">|</span>
+          <button type="button" id="registerBtn" class="link-btn">Daftar</button>
+        </div>
+      </form>
+
+      <footer class="login-footer">
+        faris@ut.ac.id | faris123 </code>
+       <br> <small> <b>MOH ALFARISI MAULANA</b></small> </br>
+       <small> 048415382</small>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Modal Box -->
+  <div id="modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="close-modal" id="closeModal" aria-label="Tutup">&times;</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+
+    <footer class="site-footer" role="contentinfo" aria-label="Footer situs">
+  <div class="footer-container">
+    <p>©2025 Universitas Terbuka | Dibuat Oleh Moh Alfarisi Maulana</p>
+  </div>
+</footer>
+</body>
+</html>

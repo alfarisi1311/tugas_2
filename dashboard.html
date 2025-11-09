@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard - SITTA Universitas Terbuka</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="dashboard-bg">
+  
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-left">
+      <img src="img/logo_ut.png" alt="Logo UT" class="logo-header" />
+      <h1 class="header-title">SITTA – Universitas Terbuka</h1>
+    </div>
+    <div id="greeting" class="header-greeting"></div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <nav>
+      <ul>
+        <li><a href="dashboard.html" class="active">🏠 Beranda</a></li>
+        <li><a href="stok.html">📚 Informasi Bahan Ajar</a></li>
+        <li><a href="tracking.html">🚚 Tracking Pengiriman</a></li>
+        <li><a href="#">📊 Laporan</a></li>
+        <li><a href="#">🕓 Histori Transaksi</a></li>
+        <li><a href="index.html">🚪 Log out</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Konten Utama -->
+  <main class="content">
+    <section class="welcome">
+      <h2>Selamat Datang di Sistem Informasi SITTA</h2>
+      <p>Gunakan menu di kiri untuk mengakses berbagai fitur pengelolaan bahan ajar.</p>
+    </section>
+
+    <section class="card-grid">
+      <article class="card-menu">
+        <h3>📚 Stock Bahan Ajar</h3>
+        <p>Kelola inventaris bahan ajar, pantau stok, dan lakukan penambahan data</p>
+        <a href="stok_vue.html" class="btn primary">Buka Stock</a>
+      </article>
+
+      <article class="card-menu">
+        <h3>🚚 Tracking DO</h3>
+        <p>Buat dan lacak delivery order untuk pengiriman bahan ajar</p>
+        <a href="tracking_vue.html" class="btn primary">Buka Tracking</a>
+      </article>
+      
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+
+  <footer class="site-footer" role="contentinfo" aria-label="Footer situs">
+  <div class="footer-container">
+    <p>© 2025 Universitas Terbuka — SITTA Platform | Dibuat Oleh Moh Alfarisi Maulana</p>
+  </div>
+</footer>
+
+</body>
+</html>
